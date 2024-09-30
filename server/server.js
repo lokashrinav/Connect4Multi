@@ -2,26 +2,28 @@ import express from 'express';
 import cors from 'cors';
 import { Server } from 'socket.io';
 import http from 'http';
-// Uncomment if you decide to use __dirname
-// import { fileURLToPath } from 'url';
-// import { dirname } from 'path';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-// const __filename = fileURLToPath(import.meta.url);
-// const __dirname = dirname(__filename);
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const server = http.createServer(app);
 
-// Set up CORS to allow requests from the React app running on localhost:5173
+// Serve static files from the dist directory
+app.use(express.static(path.join(__dirname, '../dist')));
+
+// CORS setup
 app.use(cors({
-    origin: ["https://connect-lokashrinav-146496d5537d.herokuapp.com"], // Allow requests from your Heroku app
+    origin: ["https://connect-lokashrinav-146496d5537d.herokuapp.com"],
     methods: ["GET", "POST"],
     credentials: true
 }));
 
 const io = new Server(server, {
     cors: {
-        origin: ["https://connect-lokashrinav-146496d5537d.herokuapp.com"], // Allow requests from your Heroku app
+        origin: ["https://connect-lokashrinav-146496d5537d.herokuapp.com"],
         methods: ["GET", "POST"],
         credentials: true
     }
@@ -55,6 +57,15 @@ io.on('connection', (socket) => {
         }
     });
 
+    // New event for resetting the game
+    socket.on('reset-game', () => {
+        board = Array(7).fill().map(() => Array(6).fill(null));
+        currPlayer = 'Red';
+        players.forEach(player => {
+            io.to(player).emit('fill-board', board, currPlayer);
+        });
+    });
+
     socket.on('current-player', (data) => {
         currPlayer = data;
         socket.broadcast.emit('current-player', data);
@@ -71,6 +82,10 @@ io.on('connection', (socket) => {
         }
         socket.broadcast.emit('other-player', winner);
     });
+});
+
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../dist/index.html'));
 });
 
 const PORT = process.env.PORT || 8080; // Fallback to 8080 for local testing
