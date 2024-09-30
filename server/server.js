@@ -2,28 +2,26 @@ import express from 'express';
 import cors from 'cors';
 import { Server } from 'socket.io';
 import http from 'http';
-import path from 'path';
-import { fileURLToPath } from 'url';
+// Uncomment if you decide to use __dirname
+// import { fileURLToPath } from 'url';
+// import { dirname } from 'path';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+// const __filename = fileURLToPath(import.meta.url);
+// const __dirname = dirname(__filename);
 
 const app = express();
 const server = http.createServer(app);
 
-// Serve static files from the dist directory
-app.use(express.static(path.join(__dirname, '../dist')));
-
-// CORS setup
+// Set up CORS to allow requests from the React app running on localhost:5173
 app.use(cors({
-    origin: ["https://connect-lokashrinav-146496d5537d.herokuapp.com"],
+    origin: ["https://connect-lokashrinav-146496d5537d.herokuapp.com"], // Allow requests from your Heroku app
     methods: ["GET", "POST"],
     credentials: true
 }));
 
 const io = new Server(server, {
     cors: {
-        origin: ["https://connect-lokashrinav-146496d5537d.herokuapp.com"],
+        origin: ["https://connect-lokashrinav-146496d5537d.herokuapp.com"], // Allow requests from your Heroku app
         methods: ["GET", "POST"],
         credentials: true
     }
@@ -73,10 +71,6 @@ io.on('connection', (socket) => {
         }
         socket.broadcast.emit('other-player', winner);
     });
-});
-
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../dist/index.html'));
 });
 
 const PORT = process.env.PORT || 8080; // Fallback to 8080 for local testing
