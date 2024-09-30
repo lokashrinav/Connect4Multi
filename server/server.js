@@ -67,7 +67,7 @@ io.on('connection', (socket) => {
     });
 });
 
-const PORT = 8080; 
+const PORT = process.env.PORT || 8080; // Fallback to 8080 for local testing
 server.listen(PORT, '0.0.0.0', () => {
     console.log(`Server is running and listening on 0.0.0.0:${PORT}`);
 });
