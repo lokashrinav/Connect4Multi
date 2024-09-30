@@ -49,6 +49,7 @@ io.on('connection', (socket) => {
             (currPlayer === 'Yellow' && socket.id === players[1])) {
             board = data;
             io.emit('player-move', data);
+            alert("Hi")
             io.emit('check-win', data, colIndex, rowIndex);
             currPlayer = currPlayer === 'Red' ? 'Yellow' : 'Red';
             io.emit('current-player', currPlayer);

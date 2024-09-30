@@ -130,13 +130,13 @@ const SocketComponent = () => {
     });
 
     newSocket.on('check-win', (newBoard, colIndex, rowIndex) => {
-        const currentPlayer = newBoard[rowIndex][colIndex];
+        const currentPlayer = newBoard[colIndex][rowIndex];
         if (areFourConnected(newBoard, currentPlayer)) {
           setWinner(currentPlayer);
           newWin(currentPlayer);
         }
       });
-      
+
     return () => {
       newSocket.disconnect();
     };
