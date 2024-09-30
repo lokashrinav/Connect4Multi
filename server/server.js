@@ -67,7 +67,7 @@ io.on('connection', (socket) => {
     });
 
     socket.on('set-winner', (data) => {
-        socket.broadcast.emit('set-winner', data);
+        socket.broadcast.emit('set-win', data);
     });
       
     socket.on('disconnect', () => {
@@ -81,6 +81,7 @@ io.on('connection', (socket) => {
                 players[playerIndex] = nextPlayer;
             }
             else {
+                let winner;
                 if (playerIndex === 0) {
                     winner = 'Yellow';
                 } else if (playerIndex === 1) {

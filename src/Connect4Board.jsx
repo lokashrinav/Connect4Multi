@@ -4,7 +4,7 @@ import './Connect4Board.css';
 const ROWS = 7;
 const COLUMNS = 6;
 
-const Connect4Board = ({winner, setWinner, reset, playerMove, currentPlayer, board}) => {
+const Connect4Board = ({winner, setWinner, newWin, reset, playerMove, currentPlayer, board}) => {
     
   const handleClick = (colIndex) => {
     if (winner) return;
@@ -16,6 +16,7 @@ const Connect4Board = ({winner, setWinner, reset, playerMove, currentPlayer, boa
         playerMove(newBoard);
 
         if (checkForWinner(newBoard, rowIndex, colIndex, currentPlayer)) {
+            newWin(currentPlayer);
             setWinner(currentPlayer);
         }
         
