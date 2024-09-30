@@ -71,7 +71,7 @@ const Connect4Board = ({winner, setWinner, reset, playerMove, currentPlayer, boa
           </div>
         ))}
       </div>
-        <button id="resetButton" onClick={() => reset()}>Reset</button>
+        <button id="resetButton" onClick={reset()}>Reset</button>
       </div>
   );
 };
