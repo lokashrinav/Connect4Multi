@@ -34,7 +34,6 @@ const Connect4Board = ({winner, setWinner, playerMove, currentPlayer, board}) =>
     );
   };
 
-  // Check a direction for 4 consecutive tokens
   const checkDirection = (board, row, col, player, rowInc, colInc) => {
     let count = 0;
     for (let i = -3; i <= 3; i++) {
