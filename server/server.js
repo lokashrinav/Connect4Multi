@@ -57,6 +57,15 @@ io.on('connection', (socket) => {
         }
     });
 
+    // New event for resetting the game
+    socket.on('reset-game', () => {
+        board = Array(7).fill().map(() => Array(6).fill(null));
+        currPlayer = 'Red';
+        players.forEach(player => {
+            io.to(player).emit('fill-board', board, currPlayer);
+        });
+    });
+
     socket.on('current-player', (data) => {
         currPlayer = data;
         socket.broadcast.emit('current-player', data);
