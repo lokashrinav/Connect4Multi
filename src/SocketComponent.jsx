@@ -61,8 +61,8 @@ const SocketComponent = () => {
       console.log(`Player disconnected: ${newSocket.id}`);
     });
 
-    newSocket.on('set-winner', () => {
-        setWinner(winner);
+    newSocket.on('set-winner', (newWinner) => {
+        setWinner(newWinner);
     });
 
     return () => {
