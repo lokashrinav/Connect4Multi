@@ -12,6 +12,70 @@ const SocketComponent = () => {
     socket.emit('reset-game');
   }
 
+  const areFourConnected = (board, player) => {
+    const height = board[0].length; // Assuming board is an array of columns
+    const width = board.length;
+  
+    // Horizontal Check
+    for (let j = 0; j < height; j++) {
+      for (let i = 0; i < width - 3; i++) {
+        if (
+          board[i][j] === player &&
+          board[i + 1][j] === player &&
+          board[i + 2][j] === player &&
+          board[i + 3][j] === player
+        ) {
+          return true;
+        }
+      }
+    }
+  
+    // Vertical Check
+    for (let i = 0; i < width; i++) {
+      for (let j = 0; j < height - 3; j++) {
+        if (
+          board[i][j] === player &&
+          board[i][j + 1] === player &&
+          board[i][j + 2] === player &&
+          board[i][j + 3] === player
+        ) {
+          return true;
+        }
+      }
+    }
+  
+    // Ascending Diagonal Check
+    for (let i = 3; i < width; i++) {
+      for (let j = 0; j < height - 3; j++) {
+        if (
+          board[i][j] === player &&
+          board[i - 1][j + 1] === player &&
+          board[i - 2][j + 2] === player &&
+          board[i - 3][j + 3] === player
+        ) {
+          return true;
+        }
+      }
+    }
+  
+    // Descending Diagonal Check
+    for (let i = 3; i < width; i++) {
+      for (let j = 3; j < height; j++) {
+        if (
+          board[i][j] === player &&
+          board[i - 1][j - 1] === player &&
+          board[i - 2][j - 2] === player &&
+          board[i - 3][j - 3] === player
+        ) {
+          return true;
+        }
+      }
+    }
+  
+    return false;
+  };
+    
+
   useEffect(() => {
 
     const newSocket = io("", {
@@ -66,31 +130,13 @@ const SocketComponent = () => {
     });
 
     newSocket.on('check-win', (newBoard, colIndex, rowIndex) => {
-        const directions = [[0,1], [1,0], [1,1], [1,-1]];
         const currentPlayer = newBoard[rowIndex][colIndex];
-        
-        const checkDirection = (dx, dy) => {
-            let count = 1;
-            for (let dir of [-1, 1]) {
-                let x = colIndex + dir * dx;
-                let y = rowIndex + dir * dy;
-                while (newBoard[y]?.[x] === currentPlayer) {
-                    count++;
-                    x += dir * dx;
-                    y += dir * dy;
-                }
-            }
-            return count >= 4;
-        };
-    
-        const win = directions.some(([dx, dy]) => checkDirection(dx, dy));
-    
-        if(win) { 
-            setWinner(currPlayer);
-            newWin(currentPlayer);
+        if (areFourConnected(newBoard, currentPlayer)) {
+          setWinner(currentPlayer);
+          newWin(currentPlayer);
         }
-    });    
-
+      });
+      
     return () => {
       newSocket.disconnect();
     };
