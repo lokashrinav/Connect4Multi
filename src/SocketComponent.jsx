@@ -8,11 +8,11 @@ const SocketComponent = () => {
   const [winner, setWinner] = useState(null);
   const [currPlayer, setCurrPlayer] = useState('Red');
 
-  useEffect(() => {
+  const reset = () => {
+    newSocket.emit('reset-game');
+  }
 
-    const reset = () => {
-        newSocket.emit('reset-game');
-    }
+  useEffect(() => {
 
     const newSocket = io("", {
         transports: ["websocket"],
