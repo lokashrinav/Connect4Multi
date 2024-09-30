@@ -13,9 +13,9 @@ const Connect4Board = ({winner, setWinner, newWin, reset, playerMove, currentPla
         const newBoard = [...board];
         newBoard[colIndex][rowIndex] = currentPlayer;
 
-        playerMove(newBoard);
+        playerMove(newBoard, colIndex, rowIndex);
 
-        if (checkForWinner(newBoard, rowIndex, colIndex, currentPlayer)) {
+        if (checkForWinner(newBoard)) {
             newWin(currentPlayer);
             setWinner(currentPlayer);
         }
@@ -25,7 +25,7 @@ const Connect4Board = ({winner, setWinner, newWin, reset, playerMove, currentPla
     }
   };
 
-  const checkForWinner = (board, col, row, player) => {
+  const checkForWinner = (board) => {
     return (
       checkDirection(board, row, col, player, 1, 0) ||
       checkDirection(board, row, col, player, 0, 1) ||

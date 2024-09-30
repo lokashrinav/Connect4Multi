@@ -65,6 +65,31 @@ const SocketComponent = () => {
         setWinner(newWinner);
     });
 
+    newSocket.on('check-win', (newBoard, colIndex, rowIndex) => {
+        const directions = [[0,1], [1,0], [1,1], [1,-1]];
+        const currentPlayer = newBoard[rowIndex][colIndex];
+        
+        const checkDirection = (dx, dy) => {
+            let count = 1;
+            for (let dir of [-1, 1]) {
+                let x = colIndex + dir * dx;
+                let y = rowIndex + dir * dy;
+                while (newBoard[y]?.[x] === currentPlayer) {
+                    count++;
+                    x += dir * dx;
+                    y += dir * dy;
+                }
+            }
+            return count >= 4;
+        };
+    
+        const win = directions.some(([dx, dy]) => checkDirection(dx, dy));
+    
+        if(win) { 
+            setWinner(currPlayer);
+        }
+    });    
+
     return () => {
       newSocket.disconnect();
     };
