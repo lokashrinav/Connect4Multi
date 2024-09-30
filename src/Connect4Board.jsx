@@ -13,7 +13,7 @@ const Connect4Board = ({winner, setWinner, newWin, reset, playerMove, currentPla
         const newBoard = [...board];
         newBoard[colIndex][rowIndex] = currentPlayer;
 
-        playerMove(newBoard, colIndex, rowIndex);
+        playerMove(newBoard);
         
         return;
       }

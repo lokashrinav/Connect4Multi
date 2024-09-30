@@ -44,13 +44,12 @@ io.on('connection', (socket) => {
         spectators.push(socket.id);
     }
 
-    socket.on('player-move', (data, colIndex, rowIndex) => {
+    socket.on('player-move', (data) => {
         if ((currPlayer === 'Red' && socket.id === players[0]) || 
             (currPlayer === 'Yellow' && socket.id === players[1])) {
             board = data;
             io.emit('player-move', data);
-            alert("Hi")
-            io.emit('check-win', data, colIndex, rowIndex);
+            io.emit('check-win', data);
             currPlayer = currPlayer === 'Red' ? 'Yellow' : 'Red';
             io.emit('current-player', currPlayer);
         }
