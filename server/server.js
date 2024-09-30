@@ -28,19 +28,20 @@ const io = new Server(server, {
 
 let board = Array(7).fill().map(() => Array(6).fill(null));
 let currPlayer = 'Red';
-let players = [];
+
+let players = [null, null];
+
+let spectators = [];
 
 io.on('connection', (socket) => {
-    if (players.length < 2) {
-        players.push(socket.id);
-        io.to(socket.id).emit('fill-board', board, currPlayer);
-    } else {
-        io.to(socket.id).emit('game-full');
-        console.log("Disconnected: ", socket.id);
-        socket.disconnect();
-    }
+    const playerIndex = players.indexOf(null);
 
-    console.log(players);
+    if (playerIndex !== -1) {
+        players[playerIndex] = socket.id; 
+        io.to(socket.id).emit('fill-board', board, currPlayer); 
+    } else {
+        spectators.push(socket.id);
+    }
 
     socket.on('player-move', (data) => {
         if ((currPlayer === 'Red' && socket.id === players[0]) || 
@@ -66,16 +67,30 @@ io.on('connection', (socket) => {
         socket.broadcast.emit('current-player', data);
     });
       
-    socket.on('disconnect', () => {      
-        let disconnectedPlayerIndex = players.indexOf(socket.id);
-        let winner;
+    socket.on('disconnect', () => {
+        let playerIndex = players.indexOf(socket.id);
 
-        if (disconnectedPlayerIndex === 0) {
-            winner = 'Yellow';
-        } else if (disconnectedPlayerIndex === 1) {
-            winner = 'Red';
+        if (playerIndex !== -1) {
+            players[playerIndex] = null;
+
+            if (spectators.length > 0) {
+                const nextPlayer = spectators.shift();
+                players[playerIndex] = nextPlayer;
+            }
+            else {
+                if (disconnectedPlayerIndex === 0) {
+                    winner = 'Yellow';
+                } else if (disconnectedPlayerIndex === 1) {
+                    winner = 'Red';
+                }
+                socket.broadcast.emit('other-player', winner);
+            }
+        } else {
+            const spectatorIndex = spectators.indexOf(socket.id);
+            if (spectatorIndex !== -1) {
+                spectators.splice(spectatorIndex, 1);
+            }
         }
-        socket.broadcast.emit('other-player', winner);
     });
 });
 
