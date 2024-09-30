@@ -77,9 +77,9 @@ io.on('connection', (socket) => {
                 players[playerIndex] = nextPlayer;
             }
             else {
-                if (disconnectedPlayerIndex === 0) {
+                if (playerIndex === 0) {
                     winner = 'Yellow';
-                } else if (disconnectedPlayerIndex === 1) {
+                } else if (playerIndex === 1) {
                     winner = 'Red';
                 }
                 socket.broadcast.emit('other-player', winner);
