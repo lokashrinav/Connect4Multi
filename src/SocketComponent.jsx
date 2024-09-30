@@ -9,7 +9,7 @@ const SocketComponent = () => {
   const [currPlayer, setCurrPlayer] = useState('Red');
 
   useEffect(() => {
-    const newSocket = io("https://connect-nameless-dew-6770.fly.dev", {
+    const newSocket = io("", {
         transports: ["websocket"],
       });      
     setSocket(newSocket);
@@ -26,6 +26,13 @@ const SocketComponent = () => {
       setBoard(sentData);
     });
 
+    newSocket.on('change-user', (newBoard) => {
+      setBoard(newBoard);
+      const newPlayer = currPlayer === 'Yellow' ? 'Red' : 'Yellow';
+      setCurrPlayer(newPlayer);
+      newSocket.emit('current-player', newPlayer);
+    });
+
     newSocket.on('current-player', (sentPlayer) => {
       setCurrPlayer(sentPlayer);
     });
@@ -33,7 +40,6 @@ const SocketComponent = () => {
     newSocket.on('fill-board', (newBoard, newPlayer) => {
       setCurrPlayer(newPlayer);
       setBoard(newBoard);
-      setWinner(null); // Reset winner state on fill-board
     });
 
     newSocket.on('other-player', (newPlayer) => {
@@ -55,23 +61,14 @@ const SocketComponent = () => {
     }
   };
 
-  const handleReset = () => {
-    if (socket) {
-      socket.emit('reset-game');
-    }
-  };
-
   return (
-    <div>
-      <button onClick={handleReset}>Reset Game</button>
-      <Connect4Board
-        winner={winner}
-        setWinner={setWinner}
-        board={board}
-        playerMove={handleMove}
-        currentPlayer={currPlayer}
-      />
-    </div>
+    <Connect4Board
+      winner={winner}
+      setWinner={setWinner}
+      board={board}
+      playerMove={handleMove}
+      currentPlayer={currPlayer}
+    />
   );
 };
 
