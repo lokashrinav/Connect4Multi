@@ -10,10 +10,8 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const server = http.createServer(app);
 
-// Serve static files from the dist directory
 app.use(express.static(path.join(__dirname, '../dist')));
 
-// CORS setup
 app.use(cors({
     origin: ["https://connect-lokashrinav-146496d5537d.herokuapp.com"],
     methods: ["GET", "POST"],
@@ -28,7 +26,6 @@ const io = new Server(server, {
     }
 });
 
-// Initialize the game board and player variables
 let board = Array(7).fill().map(() => Array(6).fill(null));
 let currPlayer = 'Red';
 let players = [];
