@@ -8,7 +8,6 @@ const Connect4Board = ({winner, setWinner, playerMove, currentPlayer, board}) =>
     
   const handleClick = (colIndex) => {
     if (winner) return;
-
     for (let rowIndex = ROWS - 1; rowIndex >= 0; rowIndex--) {
       if (board[colIndex][rowIndex] === null) {
         const newBoard = [...board];
