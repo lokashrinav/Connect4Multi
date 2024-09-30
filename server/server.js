@@ -2,23 +2,26 @@ import express from 'express';
 import cors from 'cors';
 import { Server } from 'socket.io';
 import http from 'http';
+import path from 'path'; // Import path module
 
 const app = express();
 const server = http.createServer(app);
 
-// Set up CORS to allow requests from the React app running on localhost:5173
 app.use(cors({
     origin: ["https://connect-lokashrinav-146496d5537d.herokuapp.com"], // Allow requests from your Heroku app
     methods: ["GET", "POST"],
     credentials: true
-  }));  
-  
+}));
+
+// Serve static files from the dist directory
+app.use(express.static(path.join(__dirname, '../dist'))); // Adjust the path to point to the dist directory
+
 const io = new Server(server, {
-cors: {
-    origin: ["https://connect-lokashrinav-146496d5537d.herokuapp.com"], // Allow requests from your Heroku app
-    methods: ["GET", "POST"],
-    credentials: true
-}
+    cors: {
+        origin: ["https://connect-lokashrinav-146496d5537d.herokuapp.com"], // Allow requests from your Heroku app
+        methods: ["GET", "POST"],
+        credentials: true
+    }
 });
 
 // Initialize the game board and player variables
