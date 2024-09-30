@@ -61,6 +61,10 @@ const SocketComponent = () => {
       console.log(`Player disconnected: ${newSocket.id}`);
     });
 
+    newSocket.on('set-winner', () => {
+        setWinner(winner);
+    });
+
     return () => {
       newSocket.disconnect();
     };
@@ -72,11 +76,17 @@ const SocketComponent = () => {
     }
   };
 
+  const newWin = (winner) => {
+    if (socket) {
+      socket.emit('set-winner', winner);
+    }
+  };
+
   return (
     <Connect4Board
       reset={reset}
       winner={winner}
-      setWinner={setWinner}
+      setWinner={newWin}
       board={board}
       playerMove={handleMove}
       currentPlayer={currPlayer}

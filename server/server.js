@@ -65,6 +65,10 @@ io.on('connection', (socket) => {
         currPlayer = data;
         socket.broadcast.emit('current-player', data);
     });
+
+    socket.on('set-winner', (data) => {
+        socket.broadcast.emit('set-winner', data);
+    });
       
     socket.on('disconnect', () => {
         let playerIndex = players.indexOf(socket.id);
