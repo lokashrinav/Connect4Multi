@@ -131,11 +131,15 @@ const SocketComponent = () => {
     });
 
     newSocket.on('check-win', (newBoard) => {
-        if (areFourConnected(newBoard, currPlayer)) {
-          setWinner(currPlayer);
-          newWin(currPlayer);
+        if (areFourConnected(newBoard, 'Red')) {
+          setWinner('Red');
+          newWin('Red');
         }
-      });
+        else if(areFourConnected(newBoard, 'Yellow')) {
+            setWinner('Yellow');
+            newWin('Yellow');
+        };
+    });
 
     return () => {
       newSocket.disconnect();
