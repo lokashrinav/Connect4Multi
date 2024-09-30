@@ -9,6 +9,11 @@ const SocketComponent = () => {
   const [currPlayer, setCurrPlayer] = useState('Red');
 
   useEffect(() => {
+
+    const reset = () => {
+        newSocket.emit('reset-game');
+    }
+
     const newSocket = io("", {
         transports: ["websocket"],
       });      
@@ -63,6 +68,7 @@ const SocketComponent = () => {
 
   return (
     <Connect4Board
+      reset={reset}
       winner={winner}
       setWinner={setWinner}
       board={board}

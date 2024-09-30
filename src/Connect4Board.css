@@ -12,6 +12,27 @@
     gap: 5px; 
     margin-bottom: 20px;
   }
+
+  .reset-container {
+    text-align: center; /* Center the button within the div */
+    margin: 20px; /* Add some margin around the div */
+  }
+
+  #resetButton {
+    padding: 10px 20px; /* Add padding for a better button size */
+    font-size: 16px; /* Set font size */
+    color: white; /* Text color */
+    background-color: #FF4C4C; /* Button color */
+    border: none; /* Remove border */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s ease; /* Smooth background color transition */
+  }
+
+  #resetButton:hover {
+    background-color: #FF2B2B; /* Darker shade on hover */
+  }
+
   
   .cell {
     width: 80px;

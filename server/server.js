@@ -40,6 +40,7 @@ io.on('connection', (socket) => {
         players[playerIndex] = socket.id; 
         io.to(socket.id).emit('fill-board', board, currPlayer); 
     } else {
+        io.to(socket.id).emit('fill-board', board, currPlayer); 
         spectators.push(socket.id);
     }
 
@@ -57,9 +58,7 @@ io.on('connection', (socket) => {
     socket.on('reset-game', () => {
         board = Array(7).fill().map(() => Array(6).fill(null));
         currPlayer = 'Red';
-        players.forEach(player => {
-            io.to(player).emit('fill-board', board, currPlayer);
-        });
+        io.emit('fill-board', board, currPlayer);
     });
 
     socket.on('current-player', (data) => {
