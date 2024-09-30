@@ -2,6 +2,10 @@
 
 This is a multiplayer Connect 4 game built with React, Socket.IO, and Express. Two players can play the game in real-time, and additional users can spectate.
 
+Heroku Link: https://connect-lokashrinav-146496d5537d.herokuapp.com/
+
+(Might be Down Because I Am Broke and Can't Afford Hosting Fees for Too Long)
+
 ## Features
 
 - Real-time multiplayer functionality using Socket.IO.
