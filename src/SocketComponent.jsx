@@ -53,7 +53,7 @@ const SocketComponent = () => {
     return () => {
       newSocket.disconnect();
     };
-  }, []); // Empty dependency array to run only once
+  }, []); 
 
   const handleMove = (newBoard) => {
     if (socket) {
