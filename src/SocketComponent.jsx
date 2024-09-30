@@ -9,7 +9,7 @@ const SocketComponent = () => {
   const [currPlayer, setCurrPlayer] = useState('Red');
 
   const reset = () => {
-    newSocket.emit('reset-game');
+    socket.emit('reset-game');
   }
 
   useEffect(() => {
