@@ -25,7 +25,6 @@ const Connect4Board = ({winner, setWinner, playerMove, currentPlayer, board}) =>
     }
   };
 
-  // Check if the current player has won
   const checkForWinner = (board, col, row, player) => {
     return (
       checkDirection(board, row, col, player, 1, 0) || // Horizontal
