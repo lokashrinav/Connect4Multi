@@ -16,7 +16,6 @@ const Connect4Board = ({winner, setWinner, playerMove, currentPlayer, board}) =>
 
         playerMove(newBoard);
 
-        // Check for a winner after the move
         if (checkForWinner(newBoard, rowIndex, colIndex, currentPlayer)) {
           setWinner(currentPlayer);
         }
