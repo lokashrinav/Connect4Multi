@@ -47,6 +47,12 @@ const SocketComponent = () => {
       setBoard(newBoard);
     });
 
+    newSocket.on('reset-board', (newBoard, newPlayer) => {
+        setCurrPlayer(newPlayer);
+        setWinner(null);
+        setBoard(newBoard);
+      });
+
     newSocket.on('other-player', (newPlayer) => {
       setWinner(newPlayer);
     });

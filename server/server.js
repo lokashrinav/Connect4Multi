@@ -58,7 +58,7 @@ io.on('connection', (socket) => {
     socket.on('reset-game', () => {
         board = Array(7).fill().map(() => Array(6).fill(null));
         currPlayer = 'Red';
-        io.emit('fill-board', board, currPlayer);
+        io.emit('reset-board', board, currPlayer);
     });
 
     socket.on('current-player', (data) => {
