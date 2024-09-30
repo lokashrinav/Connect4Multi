@@ -87,6 +87,7 @@ const SocketComponent = () => {
     
         if(win) { 
             setWinner(currPlayer);
+            newWin(currentPlayer);
         }
     });    
 
