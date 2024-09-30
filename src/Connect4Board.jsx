@@ -14,39 +14,10 @@ const Connect4Board = ({winner, setWinner, newWin, reset, playerMove, currentPla
         newBoard[colIndex][rowIndex] = currentPlayer;
 
         playerMove(newBoard, colIndex, rowIndex);
-
-        if (checkForWinner(newBoard)) {
-            newWin(currentPlayer);
-            setWinner(currentPlayer);
-        }
         
         return;
       }
     }
-  };
-
-  const checkForWinner = (board) => {
-    return (
-      checkDirection(board, row, col, player, 1, 0) ||
-      checkDirection(board, row, col, player, 0, 1) ||
-      checkDirection(board, row, col, player, 1, 1) ||
-      checkDirection(board, row, col, player, 1, -1) 
-    );
-  };
-
-  const checkDirection = (board, row, col, player, rowInc, colInc) => {
-    let count = 0;
-    for (let i = -3; i <= 3; i++) {
-      const r = row + i * rowInc;
-      const c = col + i * colInc;
-      if (r >= 0 && r < ROWS && c >= 0 && c < COLUMNS && board[r][c] === player) {
-        count++;
-        if (count === 4) return true;
-      } else {
-        count = 0;
-      }
-    }
-    return false;
   };
 
   return (
