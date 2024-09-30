@@ -4,7 +4,7 @@ This is a multiplayer Connect 4 game built with React, Socket.IO, and Express. T
 
 Heroku Link: https://connect-lokashrinav-146496d5537d.herokuapp.com/
 
-(Might be Down Because I Am Broke and Can't Afford Hosting Fees for Too Long)
+(Link Might be Down Because I Am Broke and Can't Afford Hosting Fees for Too Long)
 
 ## Features
 
