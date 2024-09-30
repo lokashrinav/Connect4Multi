@@ -1,82 +1,94 @@
-import React, { useEffect, useState } from 'react';
-import './Connect4Board.css'; // You can style this later
+import express from 'express';
+import cors from 'cors';
+import { Server } from 'socket.io';
+import http from 'http';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-const ROWS = 7;
-const COLUMNS = 6;
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-const Connect4Board = ({winner, setWinner, playerMove, currentPlayer, board}) => {
-    
-  const handleClick = (colIndex) => {
-    if (winner) return;
+const app = express();
+const server = http.createServer(app);
 
-    for (let rowIndex = ROWS - 1; rowIndex >= 0; rowIndex--) {
-      if (board[colIndex][rowIndex] === null) {
-        const newBoard = [...board];
-        newBoard[colIndex][rowIndex] = currentPlayer;
+// Serve static files from the dist directory
+app.use(express.static(path.join(__dirname, '../dist')));
 
-        playerMove(newBoard);
+// CORS setup
+app.use(cors({
+    origin: ["https://connect-lokashrinav-146496d5537d.herokuapp.com"],
+    methods: ["GET", "POST"],
+    credentials: true
+}));
 
-        // Check for a winner after the move
-        if (checkForWinner(newBoard, rowIndex, colIndex, currentPlayer)) {
-          setWinner(currentPlayer);
+const io = new Server(server, {
+    cors: {
+        origin: ["https://connect-lokashrinav-146496d5537d.herokuapp.com"],
+        methods: ["GET", "POST"],
+        credentials: true
+    }
+});
+
+// Initialize the game board and player variables
+let board = Array(7).fill().map(() => Array(6).fill(null));
+let currPlayer = 'Red';
+let players = [];
+
+io.on('connection', (socket) => {
+    if (players.length < 2) {
+        players.push(socket.id);
+        io.to(socket.id).emit('fill-board', board, currPlayer);
+    } else {
+        io.to(socket.id).emit('game-full');
+        console.log("Disconnected: ", socket.id);
+        socket.disconnect();
+    }
+
+    console.log(players);
+
+    socket.on('player-move', (data) => {
+        if ((currPlayer === 'Red' && socket.id === players[0]) || 
+            (currPlayer === 'Yellow' && socket.id === players[1])) {
+            board = data;
+            io.emit('player-move', data);
+            
+            currPlayer = currPlayer === 'Red' ? 'Yellow' : 'Red';
+            io.emit('current-player', currPlayer);
         }
-        
-        return;
-      }
-    }
-  };
+    });
 
-  // Check if the current player has won
-  const checkForWinner = (board, col, row, player) => {
-    return (
-      checkDirection(board, row, col, player, 1, 0) || // Horizontal
-      checkDirection(board, row, col, player, 0, 1) || // Vertical
-      checkDirection(board, row, col, player, 1, 1) || // Diagonal (bottom-left to top-right)
-      checkDirection(board, row, col, player, 1, -1)   // Diagonal (top-left to bottom-right)
-    );
-  };
+    // New event for resetting the game
+    socket.on('reset-game', () => {
+        board = Array(7).fill().map(() => Array(6).fill(null));
+        currPlayer = 'Red';
+        players.forEach(player => {
+            io.to(player).emit('fill-board', board, currPlayer);
+        });
+    });
 
-  // Check a direction for 4 consecutive tokens
-  const checkDirection = (board, row, col, player, rowInc, colInc) => {
-    let count = 0;
-    for (let i = -3; i <= 3; i++) {
-      const r = row + i * rowInc;
-      const c = col + i * colInc;
-      if (r >= 0 && r < ROWS && c >= 0 && c < COLUMNS && board[r][c] === player) {
-        count++;
-        if (count === 4) return true;
-      } else {
-        count = 0;
-      }
-    }
-    return false;
-  };
+    socket.on('current-player', (data) => {
+        currPlayer = data;
+        socket.broadcast.emit('current-player', data);
+    });
+      
+    socket.on('disconnect', () => {      
+        let disconnectedPlayerIndex = players.indexOf(socket.id);
+        let winner;
 
-  return (
-    <div className="game-container">
-      <h1>Connect 4</h1>
-      {winner ? (
-        <h2>{winner} Wins!</h2>
-      ) : (
-        <h2>Current Player: {currentPlayer}</h2>
-      )}
-      <div className="board">
-        {board.map((row, rowIndex) => (
-          <div key={rowIndex} className="row">
-            {row.map((cell, colIndex) => (
-              <div
-                key={colIndex}
-                className={`cell ${cell}`}
-                onClick={() => handleClick(rowIndex)}
-              >
-                {cell && <div className={`disc ${cell.toLowerCase()}`}></div>}
-              </div>
-            ))}
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-};
+        if (disconnectedPlayerIndex === 0) {
+            winner = 'Yellow';
+        } else if (disconnectedPlayerIndex === 1) {
+            winner = 'Red';
+        }
+        socket.broadcast.emit('other-player', winner);
+    });
+});
 
-export default Connect4Board
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../dist/index.html'));
+});
+
+const PORT = process.env.PORT || 8080; // Fallback to 8080 for local testing
+server.listen(PORT, '0.0.0.0', () => {
+    console.log(`Server is running and listening on 0.0.0.0:${PORT}`);
+});

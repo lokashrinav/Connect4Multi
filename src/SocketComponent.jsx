@@ -26,13 +26,6 @@ const SocketComponent = () => {
       setBoard(sentData);
     });
 
-    newSocket.on('change-user', (newBoard) => {
-      setBoard(newBoard);
-      const newPlayer = currPlayer === 'Yellow' ? 'Red' : 'Yellow';
-      setCurrPlayer(newPlayer);
-      newSocket.emit('current-player', newPlayer);
-    });
-
     newSocket.on('current-player', (sentPlayer) => {
       setCurrPlayer(sentPlayer);
     });
@@ -40,6 +33,7 @@ const SocketComponent = () => {
     newSocket.on('fill-board', (newBoard, newPlayer) => {
       setCurrPlayer(newPlayer);
       setBoard(newBoard);
+      setWinner(null); // Reset winner state on fill-board
     });
 
     newSocket.on('other-player', (newPlayer) => {
@@ -61,14 +55,23 @@ const SocketComponent = () => {
     }
   };
 
+  const handleReset = () => {
+    if (socket) {
+      socket.emit('reset-game');
+    }
+  };
+
   return (
-    <Connect4Board
-      winner={winner}
-      setWinner={setWinner}
-      board={board}
-      playerMove={handleMove}
-      currentPlayer={currPlayer}
-    />
+    <div>
+      <button onClick={handleReset}>Reset Game</button>
+      <Connect4Board
+        winner={winner}
+        setWinner={setWinner}
+        board={board}
+        playerMove={handleMove}
+        currentPlayer={currPlayer}
+      />
+    </div>
   );
 };
 
