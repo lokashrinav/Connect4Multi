@@ -53,7 +53,6 @@ io.on('connection', (socket) => {
         }
     });
 
-    // New event for resetting the game
     socket.on('reset-game', () => {
         board = Array(7).fill().map(() => Array(6).fill(null));
         currPlayer = 'Red';
