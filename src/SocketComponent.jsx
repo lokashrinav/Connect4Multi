@@ -131,10 +131,9 @@ const SocketComponent = () => {
     });
 
     newSocket.on('check-win', (newBoard) => {
-        const currentPlayer = currPlayer;
-        if (areFourConnected(newBoard, currentPlayer)) {
-          setWinner(currentPlayer);
-          newWin(currentPlayer);
+        if (areFourConnected(newBoard, currPlayer)) {
+          setWinner(currPlayer);
+          newWin(currPlayer);
         }
       });
 
