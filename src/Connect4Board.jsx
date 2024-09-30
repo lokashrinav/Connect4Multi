@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import './Connect4Board.css'; // You can style this later
+import './Connect4Board.css';
 
 const ROWS = 7;
 const COLUMNS = 6;
