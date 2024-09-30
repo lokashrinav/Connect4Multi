@@ -30,7 +30,7 @@ const Connect4Board = ({winner, setWinner, playerMove, currentPlayer, board}) =>
       checkDirection(board, row, col, player, 1, 0) ||
       checkDirection(board, row, col, player, 0, 1) ||
       checkDirection(board, row, col, player, 1, 1) ||
-      checkDirection(board, row, col, player, 1, -1)   // Diagonal (top-left to bottom-right)
+      checkDirection(board, row, col, player, 1, -1) 
     );
   };
 
