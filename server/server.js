@@ -33,18 +33,23 @@ let players = [null, null];
 
 let spectators = [];
 
+let winner = null;
+
 io.on('connection', (socket) => {
     const playerIndex = players.indexOf(null);
 
     if (playerIndex !== -1) {
         players[playerIndex] = socket.id; 
-        io.to(socket.id).emit('fill-board', board, currPlayer); 
+        io.to(socket.id).emit('fill-board', board, currPlayer, winner); 
     } else {
-        io.to(socket.id).emit('fill-board', board, currPlayer); 
+        io.to(socket.id).emit('fill-board', board, currPlayer, winner); 
         spectators.push(socket.id);
     }
 
     socket.on('player-move', (data) => {
+        if (winner) {
+            return;
+        }
         if ((currPlayer === 'Red' && socket.id === players[0]) || 
             (currPlayer === 'Yellow' && socket.id === players[1])) {
             board = data;
@@ -67,6 +72,7 @@ io.on('connection', (socket) => {
     });
 
     socket.on('set-winner', (data) => {
+        winner = data;
         socket.broadcast.emit('set-win', data);
     });
       
@@ -81,7 +87,6 @@ io.on('connection', (socket) => {
                 players[playerIndex] = nextPlayer;
             }
             else {
-                let winner;
                 if (playerIndex === 0) {
                     winner = 'Yellow';
                 } else if (playerIndex === 1) {

@@ -106,8 +106,9 @@ const SocketComponent = () => {
       setCurrPlayer(sentPlayer);
     });
 
-    newSocket.on('fill-board', (newBoard, newPlayer) => {
+    newSocket.on('fill-board', (newBoard, newPlayer, newWinner) => {
       setCurrPlayer(newPlayer);
+      setWinner(newWinner);
       setBoard(newBoard);
     });
 
