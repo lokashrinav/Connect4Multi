@@ -84,7 +84,7 @@ app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '../dist/index.html'));
 });
 
-const PORT = process.env.PORT || 8080; // Fallback to 8080 for local testing
+const PORT = process.env.PORT || 8080; 
 server.listen(PORT, '0.0.0.0', () => {
     console.log(`Server is running and listening on 0.0.0.0:${PORT}`);
 });
